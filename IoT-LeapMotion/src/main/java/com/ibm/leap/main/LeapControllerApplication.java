@@ -24,6 +24,9 @@ import javafx.util.Duration;
 
 public class LeapControllerApplication extends Application {
 	private static Logger LOGGER = Logger.getLogger(LeapControllerApplication.class.getName());
+	private static final double WIDTH = 1024;
+	private static final int HEIGTH = 800;
+	
 	private Group rootGroup = null;
 	
 	private Timeline timeline = null;
@@ -36,19 +39,21 @@ public class LeapControllerApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-		PerspectiveCamera camera = new PerspectiveCamera(true);
-		camera.setTranslateZ(-500);
-		camera.setTranslateY(-200);
-		camera.setFarClip(1000);
-		camera.setFieldOfView(40);
-		
-		Text text = new Text("BB8 Demo");
-		text.setFont(Font.font ("Arial", 27));
-		text.setFill(Color.WHITE);
-		text.setTextAlignment(TextAlignment.CENTER);
-		
-		Bounds bounds = text.getLayoutBounds();
-		text.relocate(-1 * bounds.getWidth()/2, -400 + bounds.getHeight());
+        Text text = new Text("BB8 Demo");
+        text.setFont(Font.font ("Arial", 27));
+        text.setFill(Color.WHITE);
+        text.setTextAlignment(TextAlignment.CENTER);
+
+        Bounds bounds = text.getLayoutBounds();
+        text.setX((WIDTH - bounds.getWidth())/2);
+        text.setY(-1 * (HEIGTH /2) + 3*bounds.getHeight());
+
+        PerspectiveCamera camera = new PerspectiveCamera(true);
+        camera.setTranslateX(WIDTH/2);
+        camera.setTranslateY(0);
+        camera.setTranslateZ(-1000);
+        camera.setFarClip(2000);
+        camera.setFieldOfView(40);
 		
 		rootGroup = new Group();
 		rootGroup.setDepthTest(DepthTest.ENABLE);
@@ -66,7 +71,7 @@ public class LeapControllerApplication extends Application {
 		leapController.enableGesture(Gesture.Type.TYPE_SWIPE);
 		//leapController.enableGesture(Gesture.Type.TYPE_CIRCLE);
 		
-		processor = new FrameProcessor(rootGroup, leapController);
+		processor = new FrameProcessor(rootGroup, leapController, WIDTH/2);
 		try {
 			processor.init();
 		} catch (IoTException e) {

@@ -25,13 +25,16 @@ public class FrameProcessor {
 	
 	private Group rootGroup = null;
 	
+	private double xOffset = 0;
+	
     
-    public FrameProcessor(Group rootGroup, Controller controller) {
+    public FrameProcessor(Group rootGroup, Controller controller, double xOffset) {
     	this.controller = controller;
     	this.listener = new GestureListener();
     	
-
     	this.rootGroup = rootGroup;
+    	
+    	this.xOffset = xOffset;
 	}
     
     public void init() throws IoTException {
@@ -107,7 +110,7 @@ public class FrameProcessor {
 		Point3D rotationAxis = new Point3D(cross.getX(), -cross.getY(), cross.getZ());       
 		
 		cylinder.getTransforms().addAll(
-			new Translate(position.getX(), -position.getY(), -position.getZ()),
+			new Translate(position.getX() + xOffset, -position.getY() + 100, -position.getZ()),
 			new Rotate(
 					-Math.toDegrees(angle),
 					0,0,0,

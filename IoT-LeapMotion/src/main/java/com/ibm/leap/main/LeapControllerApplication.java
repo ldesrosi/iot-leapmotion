@@ -64,7 +64,7 @@ public class LeapControllerApplication extends Application {
 		leapController = new Controller();
 		
 		leapController.enableGesture(Gesture.Type.TYPE_SWIPE);
-		leapController.enableGesture(Gesture.Type.TYPE_CIRCLE);
+		//leapController.enableGesture(Gesture.Type.TYPE_CIRCLE);
 		
 		processor = new FrameProcessor(rootGroup, leapController);
 		try {

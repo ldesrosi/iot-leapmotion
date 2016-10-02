@@ -19,6 +19,9 @@ public class GestureListener {
 	private IoTManager manager = null;
 	
 	private Group rootGroup = null;
+	
+	private boolean invertLeftRight = true;
+	private boolean invertUpDown = true;
 
 	public void init(Group rootGroup) throws IoTException {
 		this.rootGroup = rootGroup;
@@ -54,7 +57,7 @@ public class GestureListener {
 	}
 
 	public void onSwipe(SwipeGesture gesture) {		
-		if (gesture.state() == Gesture.State.STATE_START) {
+		if (gesture.state() == Gesture.State.STATE_STOP) {
 			SwipeDirection swipeDirection = direction(gesture);
 			updateStatusText(swipeDirection, gesture);
 			
@@ -93,9 +96,17 @@ public class GestureListener {
 		float y = gesture.direction().getY();
 		
 		if (Math.abs(x) > Math.abs(y)) {
-			return (x >= 0)?SwipeDirection.RIGHT:SwipeDirection.LEFT;
+			if (invertLeftRight) {
+				return (x >= 0)?SwipeDirection.LEFT:SwipeDirection.RIGHT;
+			} else {
+				return (x >= 0)?SwipeDirection.RIGHT:SwipeDirection.LEFT;
+			}
 		} else {
-			return (y >= 0)?SwipeDirection.UP:SwipeDirection.DOWN;
+			if (invertUpDown) {
+				return (y >= 0)?SwipeDirection.DOWN:SwipeDirection.UP;
+			} else {
+				return (y >= 0)?SwipeDirection.UP:SwipeDirection.DOWN;
+			}
 		}
 	}
 
@@ -164,6 +175,12 @@ public class GestureListener {
 	
 	private void updateStatusText(SwipeDirection swipeDirection, SwipeGesture gesture) {
 		LOGGER.info("SWIPE DIRECTION: " + swipeDirection.toString());
+		
+		if (invertLeftRight && (swipeDirection.equals(SwipeDirection.RIGHT) || swipeDirection.equals(SwipeDirection.LEFT))) {
+			swipeDirection = swipeDirection.equals(SwipeDirection.RIGHT)?SwipeDirection.LEFT:SwipeDirection.RIGHT;
+		} else if (invertUpDown && (swipeDirection.equals(SwipeDirection.UP) || swipeDirection.equals(SwipeDirection.DOWN))) {
+			swipeDirection = swipeDirection.equals(SwipeDirection.UP)?SwipeDirection.DOWN:SwipeDirection.UP;
+		}
 		
 		((Text) rootGroup.getChildren().get(1)).setText(swipeDirection.toString());
 	}

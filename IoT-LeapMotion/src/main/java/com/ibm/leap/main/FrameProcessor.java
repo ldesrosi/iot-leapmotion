@@ -14,12 +14,14 @@ import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 public class FrameProcessor {
 	private Controller controller;
 	private GestureListener listener;
+	private long lastGesture = 0;
 	
 	private Group rootGroup = null;
 	
@@ -52,13 +54,19 @@ public class FrameProcessor {
 		rootGroup.getChildren().clear();
 		rootGroup.getChildren().addAll(camera, text);
 		
+		
         frame.gestures().forEach(gesture->{
         	if (gesture.isValid()) {
         		listener.processGesture(gesture);
+        		lastGesture = System.currentTimeMillis();
         	}
         });
         
-        frame.hands().forEach(hand->{     
+        if (System.currentTimeMillis() - lastGesture > 5000) {
+        	((Text) rootGroup.getChildren().get(1)).setText("BB8 Demo");
+        }
+        
+        frame.hands().forEach(hand->{    
 	        Arm arm = hand.arm();
 	        
 	        if (arm.isValid()) {
